@@ -13,7 +13,7 @@ export default async function handler(
   try {
     // Verificar si el usuario está autenticado
     const verifyResponse = await axios.get(
-      `http://localhost:3000/auth/verify`,
+      `${process.env.BASE_URL}/auth/verify`,
       {
         headers: {
           Cookie: req.headers.cookie || ''

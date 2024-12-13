@@ -3,6 +3,7 @@
 import { NestFactory } from '@nestjs/core';
 import * as CookieParser from "cookie-parser";
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,15 @@ async function bootstrap() {
       'Authorization'
     ]
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('PT_Pasi API')
+    .setDescription('API para prueba tecnica.')
+    .setVersion('1.0')
+    .addTag('Prueba tecnica')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
 
   await app.listen(process.env.PORT ?? 3000);
 }

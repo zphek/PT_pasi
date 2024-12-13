@@ -96,7 +96,7 @@ export default function DashboardPage() {
       icon: Package,
     },
     {
-      value: '/clients',
+      value: '/customers',
       label: 'Clientes',
       icon: UserCheck,
     },

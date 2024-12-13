@@ -27,7 +27,6 @@ import {
     AlertDialogAction,
   } from "@/components/ui/alert-dialog"
 import { deleteProduct } from '@/utilites/ProductRequests';
-import { Alert, AlertTitle, AlertDescription } from '../ui/alert';
 import toast, { Toaster } from 'react-hot-toast';
   
 
@@ -303,7 +302,6 @@ const ProductList = ({ products: initialProducts, categories, changePage, pagina
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
       <Toaster/>
     </div>
   );

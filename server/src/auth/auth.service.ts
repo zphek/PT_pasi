@@ -56,7 +56,6 @@ export class AuthService {
       console.log(data.session.access_token, "XDDD");
       
       if (data.session) {
-        // Calculate remaining time until token expiration
         const expiresIn = new Date(data.session.expires_at).getTime();
 
         response.setHeader('Set-Cookie', [
@@ -85,7 +84,6 @@ export class AuthService {
         throw new UnauthorizedException('No token found');
       }
   
-      // Extraer específicamente la cookie accessToken
       const match = cookies.match(/accessToken=([^;]+)/);
       const accessToken = match ? match[1] : null;
   
@@ -93,7 +91,6 @@ export class AuthService {
         throw new UnauthorizedException('Access token not found');
       }
   
-      // Verificar el token con Supabase
       const { data: { user }, error } = await this.supabaseClient.auth.getUser(accessToken);
   
       if (error) {
