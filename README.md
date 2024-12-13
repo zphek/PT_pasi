@@ -1,6 +1,6 @@
 # PT_Pasi
 
-Prueba técnica para la integración de un sistema frontend y backend para la gestión de productos y reservas.
+Prueba técnica(startup PASI).
 
 ## Requisitos Previos
 
@@ -11,7 +11,7 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
 
 ## Instalación
 
-1. Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+1. Agrega el archivo `.env` proporcionado por mi(Bernardo :)) en la raiz del proyecto, el archivo debe lucir algo asi:
 
    ```env
    # Frontend
@@ -25,8 +25,6 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
    SERVER_PORT=4000
    ```
 
-   Asegúrate de reemplazar `<usuario>`, `<password>`, `<tu-supabase-url>`, `<tu-supabase-key>`, y `<tu-jwt-secret>` con tus valores reales.
-
 2. Construye y levanta los contenedores con Docker Compose:
 
    ```bash
@@ -37,5 +35,3 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
 
    - Frontend: [http://localhost:3000](http://localhost:3000)
    - Backend: [http://localhost:4000](http://localhost:4000)
-
-"# PT_pasi" 
