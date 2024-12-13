@@ -1,5 +1,5 @@
 import axios from "axios"
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || "http://localhost:4000";
 
 export enum requestMethods{
     GET = "get",

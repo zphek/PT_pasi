@@ -1,0 +1,42 @@
+version: '1.0'
+services:
+  client:
+    container_name: "PT_Pasi_frontend"
+    build: ./client
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - BASE_URL=${CLIENT_BASE_URL}
+    networks:
+      - pt_pasi_network
+    volumes:
+      - ./client:/usr/src/app
+    depends_on:
+      - server
+   
+  server:
+    container_name: "PT_Pasi_backend"
+    build: ./server
+    restart: always
+    env_file: 
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - PORT=${SERVER_PORT}
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/usr/src/app
+    networks:
+      - pt_pasi_network
+
+networks:
+  pt_pasi_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

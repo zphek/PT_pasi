@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
       }
 
       // Si no hay caché o expiró, hacer la verificación
-      const verifyResponse = await fetch(`http://localhost:3000/auth/verify`, {
+      const verifyResponse = await fetch(`${process.env.BASE_URL}/auth/verify`, {
         headers: {
           'Cookie': `accessToken=${token.value}`
         },
@@ -90,7 +90,7 @@ export async function middleware(request: NextRequest) {
           return NextResponse.next();
         }
 
-        const verifyResponse = await fetch(`http://localhost:3000/auth/verify`, {
+        const verifyResponse = await fetch(`${process.env.BASE_URL}/auth/verify`, {
           headers: {
             'Cookie': `accessToken=${token.value}`
           },

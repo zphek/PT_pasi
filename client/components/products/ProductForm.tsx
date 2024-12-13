@@ -7,118 +7,117 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { checkIfProductNameExist, createProduct, updateProduct } from '@/utilites/ProductRequests';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const ProductForm = ({ 
   open, 
   onClose, 
   product, 
   categories, 
-  onSubmit 
-}:any) => {
+}: any) => {
   const [formData, setFormData] = useState(
     product || {
       productName: "",
       productDescription: "",
-      quantityInStock: 0,
+      quantityInStock: 1,
       isActive: true,
       imageUrl: "",
+      price: 1,
       category: "",
     }
   );
-  const [isNameAvalaible, setIsNameAvailable] = useState<any>(null);
+  const [isNameAvailable, setIsNameAvailable] = useState<any>(null);
 
-  function onChangeProductName(e:any){
-    if(product){
-        return;
+  function onChangeProductName(e: any) {
+    if (product) {
+      return;
     }
 
-    const {value} = e.target;
+    const { value } = e.target;
 
-    if(value.length == 0){
-        setIsNameAvailable(null);
+    if (value.length === 0) {
+      setIsNameAvailable(null);
     }
 
     setTimeout(async () => {
-        try {
-            const response = await checkIfProductNameExist(value);
-            const exists = response?.data?.data?.exists ?? false;
-            setIsNameAvailable(!exists);
-        } catch (error) {
-            console.error('Error checking product name:', error);
-            setIsNameAvailable(true);
-        }
-    }, 1000);    
+      try {
+        const response = await checkIfProductNameExist(value);
+        const exists = response?.data?.data?.exists ?? false;
+        setIsNameAvailable(!exists);
+      } catch (error) {
+        console.error('Error checking product name:', error);
+        setIsNameAvailable(true);
+      }
+    }, 1000);
   }
 
-  useEffect(()=>{
-    if(product){
-        setFormData(product);
-        console.log(product?.category);
+  useEffect(() => {
+    if (product) {
+      setFormData(product);
     }
-  }, [product])
+  }, [product]);
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    
-    try {
-        if(!product){
-            toast.promise(
-                createProduct(formData),      
-                {
-                  loading: "Intentando crear el producto...",
-                  success: <b>Nuevo producto agregado.</b>,
-                  error: <b>Algo ha salido mal, no se ha podido crear el producto.</b>
-                }
-              )
-        } else {
-            toast.promise(
-                updateProduct(product.productId, formData)
-                .then((response)=>{
-                    console.log(response);
-                })
-                .catch((error)=>{
-                    console.log(error);
-                }),      
-                {
-                  loading: "Actualizar producto...",
-                  success: <b>Producto actualizado.</b>,
-                  error: <b>Algo ha salido mal, no se ha podido actualizar el producto.</b>
-                }
-              )
-        }
 
-        setFormData({
-            productName: "",
-            productDescription: "",
-            quantityInStock: 0,
-            isActive: true,
-            imageUrl: "",
-            category: "",
-          });
-        setIsNameAvailable(null);
-        onClose();
+    try {
+      if (!product) {
+        toast.promise(createProduct(formData), {
+          loading: "Intentando crear el producto...",
+          success: <b>Nuevo producto agregado.</b>,
+          error: <b>Algo ha salido mal, no se ha podido crear el producto.</b>,
+        });
+      } else {
+        toast.promise(updateProduct(product.productId, formData), {
+          loading: "Actualizar producto...",
+          success: <b>Producto actualizado.</b>,
+          error: <b>Algo ha salido mal, no se ha podido actualizar el producto.</b>,
+        });
+      }
+
+      setFormData({
+        productName: "",
+        productDescription: "",
+        quantityInStock: 1,
+        isActive: true,
+        imageUrl: "",
+        price: 1,
+        category: "",
+      });
+      setIsNameAvailable(null);
+      onClose();
     } catch (error) {
-        console.log(error);
+      console.log(error);
+    }
+  };
+
+  const handleNumberInput = (value: string, key: string) => {
+    const parsedValue = parseInt(value);
+    if (!isNaN(parsedValue) && parsedValue >= 1) {
+      setFormData({ ...formData, [key]: parsedValue });
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={()=> {
+    <Dialog
+      open={open}
+      onOpenChange={() => {
         setFormData({
-            productName: "",
-            productDescription: "",
-            quantityInStock: 0,
-            isActive: true,
-            imageUrl: "",
-            category: "",
-          });
+          productName: "",
+          productDescription: "",
+          quantityInStock: 1,
+          isActive: true,
+          imageUrl: "",
+          price: 1,
+          category: "",
+        });
         onClose();
-    }}>
+      }}
+    >
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {product ? 'Editar Producto' : 'Nuevo Producto'}
+            {product ? "Editar Producto" : "Nuevo Producto"}
           </DialogTitle>
         </DialogHeader>
 
@@ -128,11 +127,17 @@ const ProductForm = ({
             <Input
               id="productName"
               value={formData.productName}
-              onChange={(e) => {setFormData({...formData, productName: e.target.value}); onChangeProductName(e);}}
+              onChange={(e) => {
+                setFormData({ ...formData, productName: e.target.value });
+                onChangeProductName(e);
+              }}
               required
             />
-
-            { isNameAvalaible != null && <h1 className={`${isNameAvalaible ? 'text-green-500' : 'text-red-500'}`}>{ isNameAvalaible ? 'Nombre disponible.' : 'Nombre no disponible.' }</h1> }
+            {isNameAvailable !== null && (
+              <h1 className={`${isNameAvailable ? "text-green-500" : "text-red-500"}`}>
+                {isNameAvailable ? "Nombre disponible." : "Nombre no disponible."}
+              </h1>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -140,7 +145,7 @@ const ProductForm = ({
             <Textarea
               id="productDescription"
               value={formData.productDescription}
-              onChange={(e) => setFormData({...formData, productDescription: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, productDescription: e.target.value })}
               required
             />
           </div>
@@ -150,13 +155,13 @@ const ProductForm = ({
               <Label htmlFor="category">Categoría</Label>
               <Select
                 value={formData.category}
-                onValueChange={(value) => setFormData({...formData, category: value})}
+                onValueChange={(value) => setFormData({ ...formData, category: value })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar categoría" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category:any) => (
+                  {categories.map((category: any) => (
                     <SelectItem key={category.categoryId} value={category.categoryName}>
                       {category.categoryName}
                     </SelectItem>
@@ -170,20 +175,23 @@ const ProductForm = ({
               <Input
                 id="quantityInStock"
                 type="number"
-                min="0"
+                min="1"
                 value={formData.quantityInStock}
-                onChange={(e) => setFormData({...formData, quantityInStock: parseInt(e.target.value)})}
+                onChange={(e) => handleNumberInput(e.target.value, "quantityInStock")}
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="imageUrl">URL de la imagen</Label>
+            <Label htmlFor="price">Precio</Label>
             <Input
-              id="imageUrl"
-              value={formData.imageUrl}
-              onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+              id="price"
+              type="number"
+              min="1"
+              value={formData.price}
+              onChange={(e) => handleNumberInput(e.target.value, "price")}
+              required
             />
           </div>
 
@@ -191,7 +199,7 @@ const ProductForm = ({
             <Switch
               id="isActive"
               checked={formData.isActive}
-              onCheckedChange={(checked) => setFormData({...formData, isActive: checked})}
+              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
             />
             <Label htmlFor="isActive">Producto activo</Label>
           </div>
@@ -201,7 +209,7 @@ const ProductForm = ({
               Cancelar
             </Button>
             <Button type="submit">
-              {product ? 'Guardar cambios' : 'Crear producto'}
+              {product ? "Guardar cambios" : "Crear producto"}
             </Button>
           </div>
         </form>

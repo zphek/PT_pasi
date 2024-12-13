@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeautures = ["mongodb"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  categoryId String @id @default(auto()) @map("_id") @db.ObjectId  // Cambiado a auto()
+  categoryName String @unique
+}
+
+model Product {
+  productId String @id @default(auto()) @map("_id") @db.ObjectId  // Cambiado a auto()
+  productName String @unique
+  productDescription String
+  quantityInStock Int
+  price Int
+  isActive Boolean
+  imageUrl String
+  category String
+  updatedAt String
+  createdAt String
+}
+
+model Customer {
+  customerId    String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String    @unique
+  phone         String
+  dni           String    @unique
+  createdAt     String
+  reservations  Reservation[]
+}
+
+model Reservation {
+  reservationId   String             @id @default(auto()) @map("_id") @db.ObjectId
+  customerId      String             @db.ObjectId        // Campo para la relación
+  customer        Customer           @relation(fields: [customerId], references: [customerId], onDelete: Cascade) // Definición de la relación
+  date            String
+  status          ReservationStatus
+  total           Float
+  createdAt       String
+  products        ReservationProduct[]
+}
+
+model ReservationProduct {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  reservation     Reservation @relation(fields: [reservationId], references: [reservationId], onDelete: Cascade)
+  reservationId   String    @db.ObjectId
+  productId       String    @db.ObjectId
+  productName     String
+  quantity        Int
+  unitPrice       Int
+  totalPrice      Int
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
