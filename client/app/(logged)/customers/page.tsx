@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  UserCircle, 
   Store, 
   Package, 
   UserCheck, 
@@ -37,9 +36,7 @@ interface TabItem {
 }
 
 export default function DashboardPage() {
-  // States
   const { setIsLoading } = useLoading();
-  const [isLoading, setIsLoadingg] = useState(true);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [customers, setCustomers] = useState<Customer[]>();
   const [pagination, setPagination] = useState<PaginationType>({
@@ -47,12 +44,10 @@ export default function DashboardPage() {
     totalPages: 1
   });
 
-  // Hooks
   const router = useRouter();
   const pathname = usePathname();
   const username = "Bernardo Báez";
 
-  // Tab configuration
   const tabs: TabItem[] = [
     {
       value: '/products',
@@ -71,12 +66,6 @@ export default function DashboardPage() {
     },
   ];
 
-  // Handlers
-  const handleLogout = () => {
-    console.log("Cerrando sesión...");
-    toast.success("Sesión cerrada correctamente");
-  };
-
   const changePage = (pageNumber: number) => {
     if (pageNumber <= pagination.totalPages) {
       setPagination((pag) => ({ ...pag, currentPage: pageNumber }));
@@ -87,7 +76,6 @@ export default function DashboardPage() {
     router.push(value);
   };
 
-  // Effects
   useEffect(() => {
     setIsLoading(true);
     async function fetchAllCustomers() {
@@ -112,13 +100,10 @@ export default function DashboardPage() {
     fetchAllCustomers();
   }, [pagination.currentPage]);
 
-  // Render
   return (
     <div className="min-h-screen bg-gray-50">
-      
       <Navbar/>
 
-      {/* Tab Navigation */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Tabs
@@ -148,7 +133,6 @@ export default function DashboardPage() {
         </Tabs>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                  {/* Welcome Card */}
                   <div className="bg-white shadow rounded-lg p-6 mb-8">
                     <div className="flex items-center space-x-4">
                       <div className="bg-blue-100 p-3 rounded-full">
@@ -171,7 +155,6 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {/* Product List */}
                   <CustomerList
                     customers={customers}
                     pagination={pagination}

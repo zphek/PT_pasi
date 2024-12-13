@@ -3,16 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from '@/components/products/ProductList';
 import { getAllProducts } from '@/utilites/ProductRequests';
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import { 
-  UserCircle, 
   Store, 
   Package, 
   UserCheck, 
@@ -23,7 +15,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { useLoading } from '@/components/loading/LoadingProvider';
 import Navbar from '@/components/Navbar';
 
-// Interfaces
 interface Product {
   productId: string;
   productName: string;
@@ -52,7 +43,6 @@ interface TabItem {
   icon: React.ElementType;
 }
 
-// Sample Data
 const SAMPLE_CATEGORIES: Category[] = [
   { categoryId: '1', categoryName: 'Electrónicos' },
   { categoryId: '2', categoryName: 'Ropa' },
@@ -61,22 +51,18 @@ const SAMPLE_CATEGORIES: Category[] = [
 ];
 
 export default function DashboardPage() {
-  // States
   const { setIsLoading } = useLoading();
   const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoadingg] = useState(true);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [pagination, setPagination] = useState<PaginationType>({
     currentPage: 1,
     totalPages: 1
   });
 
-  // Hooks
   const router = useRouter();
   const pathname = usePathname();
   const username = "Bernardo Báez";
 
-  // Tab configuration
   const tabs: TabItem[] = [
     {
       value: '/products',
@@ -95,12 +81,6 @@ export default function DashboardPage() {
     },
   ];
 
-  // Handlers
-  const handleLogout = () => {
-    console.log("Cerrando sesión...");
-    toast.success("Sesión cerrada correctamente");
-  };
-
   const changePage = (pageNumber: number) => {
     if (pageNumber <= pagination.totalPages) {
       setPagination((pag) => ({ ...pag, currentPage: pageNumber }));
@@ -111,7 +91,6 @@ export default function DashboardPage() {
     router.push(value);
   };
 
-  // Effects
   useEffect(() => {
     setIsLoading(true)
     async function fetchAllProducts() {
@@ -135,13 +114,10 @@ export default function DashboardPage() {
     fetchAllProducts();
   }, [pagination.currentPage]);
 
-  // Render
   return (
-    <div className="min-h-screen bg-gray-50">
-     
+    <div className="min-h-screen bg-gray-50">     
       <Navbar/>
 
-      {/* Tab Navigation */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Tabs
@@ -171,7 +147,6 @@ export default function DashboardPage() {
         </Tabs>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                  {/* Welcome Card */}
                   <div className="bg-white shadow rounded-lg p-6 mb-8">
                     <div className="flex items-center space-x-4">
                       <div className="bg-blue-100 p-3 rounded-full">
@@ -198,7 +173,6 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {/* Product List */}
                   <ProductList
                     products={products}
                     pagination={pagination}
